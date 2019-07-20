@@ -58,7 +58,7 @@
     }
   
     var path = new paper.Path(); 
-    path.strokeColor = 'black';
+    path.strokeColor = color;
     path.strokeWidth = '2';
   
     socket.onmessage = function(receivedMessage) {
@@ -81,6 +81,12 @@
       var jsonstr = JSON.stringify(obj);
       socket.send(jsonstr);
       path.add(event.point);
+    }
+    
+    if (url.indexOf("small") > -1) {
+      socket.onmessage = function(receivedMessage) {
+        return;
+      }
     }
 
     
