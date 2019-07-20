@@ -7,10 +7,15 @@
     <title>P4 Drawing</title>
 
     <link rel="stylesheet" type="text/css" href="{% static 'draw/vendor/bootstrap/css/bootstrap.min.css' %}">
-    <script type="text/javascript" src="{% static 'draw/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css"/><script type="text/javascript" src="{% static 'draw/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'draw/vendor/paper/paper-full.min.js' %}"></script>
 
     <style type="text/css">
+      
+      #myCanvas{
+        border: 2px solid black;
+      }
+      
     </style>
 
 </head>
@@ -28,9 +33,33 @@
     // getting the URL (you may want to use for Exercise 3)
     var url = window.location.href;
 
-    // var socket = new WebSocket(
-    //     'wss://<your url here>/ws/draw');
+    var socket = new WebSocket('wss://p3-websockets-jocelynzsun-jocelynzsun705375.codeanyapp.com/ws/draw');
+  
+    socket.onopen = function(event) {
+      console.log("Connection established");
+    }
+  
+    var path = new paper.Path(); 
+    var path2 = new paper.Path();
+  
+    socket.onmessage = function(receivedMessage) {
+      var data = receivedMessage.data;
+      var obj = JSON.parse(data);
+      path2.add(new paper.Point(obj));
+      path2.strokeColor = 'green';
+      path2.strokeWidth = '2';
+    }
+    
+    tool.onMouseMove = function(event) {
+      var obj = {x: event.point.x, y: event.point.y};
+      var jsonstr = JSON.stringify(obj);
+      socket.send(jsonstr);
+      path.add(event.point);
+      path.strokeColor = 'black';
+      path.strokeWidth = '2';
+    }
 
+    
 
 </script>
 </html>
