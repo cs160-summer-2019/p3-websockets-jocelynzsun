@@ -81,12 +81,34 @@
       var jsonstr = JSON.stringify(obj);
       socket.send(jsonstr);
       path.add(event.point);
+      console.log(path.strokeColor.toString());
     }
+    
     
     if (url.indexOf("small") > -1) {
       socket.onmessage = function(receivedMessage) {
         return;
+      };
+      
+      
+    // I don't know if this works???  
+    window.addEventListener('devicemotion', (event) => {
+      var xaccel = Math.abs(event.acceleration.x);
+      var zaccel = Math.abs(event.acceleration.z);
+      
+      if ((xaccel > 1) && (zaccel > 1)) {
+        paper.project.activeLayer.removeChildren();
+      };
+    })
+  
+    // This function works  
+    window.addEventListener('deviceorientation', (event) => {
+      var turn = event.gamma;
+      
+      if (turn > 70) {
+        path.strokeColor = randomColorGenerator();
       }
+    })
     }
 
     
